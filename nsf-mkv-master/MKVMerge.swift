@@ -17,14 +17,27 @@ class MKVMerge {
         executableURL = URL.init(fileURLWithPath: "/usr/local/bin/mkvmerge")
     }
     
-    func modifyTrackNameIn(file: URL, type: MKV.TrackType, language: MKV.Language?, trackID: String?, trackName: String) throws {
+    func unifyTitleWithFileNameForFile(at url: URL) throws {
+        let fileName = url.lastPathComponent
+        let title = MKVInfo.shared.titleOfFile(at: url)
+        if title == fileName {
+            print("无须处理 " + fileName + ", 跳过.")
+        }
+        else {
+            try executeTask(with: url,
+                            operation: ["--title", url.lastPathComponent],
+                            showOutput: true)
+        }
+    }
+    
+    func modifyTrackNameInFile(at url: URL, type: MKV.TrackType, language: MKV.Language?, trackID: String?, trackName: String) throws {
         if let language = language {
-            print("开始处理 " + file.lastPathComponent + "...")
+            print("开始处理 " + url.lastPathComponent + "...")
             
-            let tracks = try MKVInfo.shared.tracks(in: file, type: type)
+            let tracks = try MKVInfo.shared.tracksInFile(at: url, type: type)
             
             if let matchedTrackIDs = tracks.filter({ $0.language == language }).map({ $0.id }).first {
-                try executeTask(with: file,
+                try executeTask(with: url,
                                 operation: ["--track-name", matchedTrackIDs + ":" + trackName],
                                 showOutput: true)
             }
@@ -34,21 +47,21 @@ class MKVMerge {
         }
     }
     
-    func removeTrackFrom(file: URL, type: MKV.TrackType, option: Option, language: MKV.Language?, trackID: String?) throws {
+    func removeTrackFromFile(at url: URL, type: MKV.TrackType, option: Option, language: MKV.Language?, trackID: String?) throws {
         if let language = language {
-            let tracks = try MKVInfo.shared.tracks(in: file, type: type)
+            let tracks = try MKVInfo.shared.tracksInFile(at: url, type: type)
             
             let remainedTrackIDs = tracks.filter() { option == .reverse ? $0.language == language : $0.language != language }
                 .map { $0.id }
             
             if tracks.count == 1
                 && remainedTrackIDs.count == 1 {
-                print("无须处理 " + file.lastPathComponent + ", 跳过.")
+                print("无须处理 " + url.lastPathComponent + ", 跳过.")
                 // MKV 文件中本身已经只剩下指定语言的 track 了，无须混流，直接略过
             }
             else if remainedTrackIDs.count > 0 {
-                print("开始处理 " + file.lastPathComponent + "...")
-                try executeTask(with: file,
+                print("开始处理 " + url.lastPathComponent + "...")
+                try executeTask(with: url,
                                 operation: ["-a", remainedTrackIDs.joined(separator: ",")],
                                 showOutput: true)
             }
@@ -61,7 +74,7 @@ class MKVMerge {
         }
     }
     
-    func removeAllTracksFrom(file: URL, type: MKV.TrackType, option: Option) throws {
+    func removeAllTracksFromFile(at url: URL, type: MKV.TrackType, option: Option) throws {
         let operation: String = {
             switch type {
             case .audio: return "--no-audio"
@@ -71,13 +84,13 @@ class MKVMerge {
         }()
         
         if operation != MKV.TrackType.other.rawValue {
-            let tracks = try MKVInfo.shared.tracks(in: file, type: type)
+            let tracks = try MKVInfo.shared.tracksInFile(at: url, type: type)
             if tracks.count == 0 {
-                print("无须处理 " + file.lastPathComponent + ", 跳过.")
+                print("无须处理 " + url.lastPathComponent + ", 跳过.")
             }
             else {
-                print("开始处理 " + file.lastPathComponent + "...")
-                try executeTask(with: file, operation: [operation], showOutput: true)
+                print("开始处理 " + url.lastPathComponent + "...")
+                try executeTask(with: url, operation: [operation], showOutput: true)
             }
         }
     }

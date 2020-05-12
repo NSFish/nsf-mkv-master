@@ -60,16 +60,20 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-track-type audio"
+            argument = "-target title"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-track-type audio"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-language jpn"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-track-name &#x65e5;&#x672c;&#x8bed;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-option --reverse"

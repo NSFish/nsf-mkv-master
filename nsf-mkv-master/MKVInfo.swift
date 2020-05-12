@@ -17,12 +17,28 @@ class MKVInfo {
         executableURL = URL.init(fileURLWithPath: "/usr/local/bin/mkvinfo")
     }
     
-    func tracks(in file: URL, type: MKV.TrackType) throws -> [MKV.Track] {
-        return try tracks(in: file).filter { $0.type == type }
+    func titleOfFile(at url: URL) -> String {
+        let fileName = url.lastPathComponent
+        let output = MKVTask.startTask(with: executableURL, arguments: [fileName])
+        
+        let titleLine = output.first() { $0.contains("Title:") }
+        
+        guard let title = titleLine?.split(separator: ":").last?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+            return ""
+        }
+        
+        return title
     }
+    
+    func tracksInFile(at url: URL, type: MKV.TrackType) throws -> [MKV.Track] {
+        return try tracksInFile(at: url).filter { $0.type == type }
+    }
+}
 
-    func tracks(in file: URL) throws -> [MKV.Track] {
-        let fileName = file.lastPathComponent
+private extension MKVInfo {
+    
+    func tracksInFile(at url: URL) throws -> [MKV.Track] {
+        let fileName = url.lastPathComponent
         let output = MKVTask.startTask(with: executableURL, arguments: [fileName])
         
         let trackInfos = try trackInfosFrom(output: output)
@@ -32,17 +48,7 @@ class MKVInfo {
             var trackID = ""
             var trackType = ""
             var trackLanguage = ""
-            
-//            | + Track
-//            |  + Track number: 1 (track ID for mkvmerge & mkvextract: 0)
-//            |  + Track UID: 1
-//            |  + Track type: video
-//            |  + Default track flag: 0
-//            |  + Lacing flag: 0
-//            |  + Codec ID: V_MPEGH/ISO/HEVC
-//            |  + Codec's private data: size 2404 (HEVC profile: Main 10 @L4.0)
-//            |  + Default duration: 00:00:00.041708333 (23.976 frames/fields per second for a video track)
-//            |  + Language: jpn
+
             trackInfo.forEach { line in
                 if line.contains("|  + Track number:") {
                     trackID = String(line.split(separator: ":").last!.trimmingCharacters(in: CharacterSet.decimalDigits.inverted))
@@ -63,9 +69,6 @@ class MKVInfo {
         
         return tracks
     }
-}
-
-private extension MKVInfo {
     
     func trackInfosFrom(output: [String]) throws -> [[String]] {
         // 先找到 "|+ Tracks" 所在行

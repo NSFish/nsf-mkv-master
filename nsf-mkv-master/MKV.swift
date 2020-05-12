@@ -15,9 +15,10 @@ class MKV {
         case modify
     }
     
-    enum Remove: String {
-        case byLanguage = "-language"
-        case all = "--no-"
+    enum Target: String {
+        case title
+        case track
+        case other
     }
 
     enum TrackType: String {

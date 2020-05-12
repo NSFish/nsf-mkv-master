@@ -28,6 +28,7 @@ var trackTypeString: String!
 var trackLanguage: MKV.Language?
 var trackID: String?
 var trackName: String?
+var target: MKV.Target?
 var optionString: String?
 for (index, argument) in CommandLine.arguments.enumerated() {
     if (argument == "-dir") {
@@ -48,6 +49,9 @@ for (index, argument) in CommandLine.arguments.enumerated() {
     else if (argument == "-track-name") {
         trackName = CommandLine.arguments[index + 1]
     }
+    else if (argument == "-target") {
+        target = MKV.Target.init(rawValue: CommandLine.arguments[index + 1])
+    }
     else if (argument == "-option") {
         optionString = CommandLine.arguments[index + 1]
     }
@@ -59,10 +63,8 @@ guard let operation = MKV.Operation.init(rawValue: operationString) else {
     throw NSFMKVError.unknownOperation
 }
 
-guard let trackType = MKV.TrackType.init(rawValue: trackTypeString) else {
-    throw NSFMKVError.unknownTrackType
-}
 
+let trackType = MKV.TrackType.init(rawValue: trackTypeString ?? "") ?? .other
 let option = Option.init(rawValue: optionString ?? "") ?? .none
 
 do {
@@ -71,21 +73,26 @@ do {
     try mkvFiles.forEach { fileURL in
         if operation == .remove {
             if option == .all {
-                try MKVMerge.shared.removeAllTracksFrom(file: fileURL, type: trackType, option: option)
+                try MKVMerge.shared.removeAllTracksFromFile(at: fileURL, type: trackType, option: option)
             }
             else {
-                try MKVMerge.shared.removeTrackFrom(file: fileURL, type: trackType, option: option, language: trackLanguage, trackID: trackID)
+                try MKVMerge.shared.removeTrackFromFile(at: fileURL, type: trackType, option: option, language: trackLanguage, trackID: trackID)
             }
         }
         else if operation == .modify {
-            try MKVMerge.shared.modifyTrackNameIn(file: fileURL,
-                                                  type: trackType,
-                                                  language: trackLanguage,
-                                                  trackID: trackID,
-                                                  trackName: trackName ?? "")
+            if let trackName = trackName {
+                try MKVMerge.shared.modifyTrackNameInFile(at: fileURL,
+                                                          type: trackType,
+                                                          language: trackLanguage,
+                                                          trackID: trackID,
+                                                          trackName: trackName)
+            }
+            else if target == .title {
+                try MKVMerge.shared.unifyTitleWithFileNameForFile(at: fileURL)
+            }
         }
     }
-
+    
     print("Done.")
 } catch let error as NSFMKVError {
     print(error)
