@@ -24,15 +24,18 @@ class MKVTask {
         return mkvFiles
     }
     
-    @discardableResult class func startTask(with executableURL: URL, arguments: [String]) -> [String] {
+    @discardableResult class func startTask(with executableURL: URL,
+                                            arguments: [String],
+                                            showOutput: Bool = false) -> [String] {
         let task = Process()
         task.currentDirectoryURL = directory
         task.executableURL = executableURL
         task.arguments = arguments
         
-        // TODO: 如何过滤输出的提示信息？
         let outputPipe = Pipe()
-        task.standardOutput = outputPipe
+        if !showOutput {
+            task.standardOutput = outputPipe
+        }
         
         // 防止在 Console 中输出 error log
         task.standardError = Pipe()
@@ -40,15 +43,18 @@ class MKVTask {
         task.launch()
         
         var output = [String]()
-        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-        if var string = String(data: outputData, encoding: .utf8) {
-            string = string.trimmingCharacters(in: .newlines)
-            output = string.components(separatedBy: "\n")
+        if !showOutput {
+            // https://stackoverflow.com/a/29519615
+            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            if var string = String(data: outputData, encoding: .utf8) {
+                string = string.trimmingCharacters(in: .newlines)
+                output = string.components(separatedBy: "\n")
+            }
         }
         
         task.waitUntilExit()
         
-//        let status = task.terminationStatus
+        //        let status = task.terminationStatus
         
         return output
     }

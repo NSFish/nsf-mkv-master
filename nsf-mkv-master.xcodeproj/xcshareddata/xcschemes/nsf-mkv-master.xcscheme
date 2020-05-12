@@ -52,11 +52,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-dir $(HOME)/Desktop"
+            argument = "-dir /Volumes/ZYAN/&#x89c6;&#x9891;/&#x52a8;&#x6f2b;/&#x6b7b;&#x795e;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-operation remove"
+            argument = "-operation modify"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -68,19 +68,19 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-option --reverse"
+            argument = "-track-name &#x65e5;&#x672c;&#x8bed;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-track-name &#x65e5;&#x672c;&#x8bed;"
+            argument = "-option --reverse"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-operation modify"
+            argument = "-operation remove"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-dir /Volumes/ZYAN/&#x89c6;&#x9891;/&#x52a8;&#x6f2b;/&#x6b7b;&#x795e;"
+            argument = "-dir $(HOME)/Desktop"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument

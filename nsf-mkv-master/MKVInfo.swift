@@ -68,8 +68,10 @@ class MKVInfo {
 private extension MKVInfo {
     
     func trackInfosFrom(output: [String]) throws -> [[String]] {
-        // 先找到 "| + Track" 所在行
-        guard let trackStartIndex = output.firstIndex(where: { $0.contains("| + Track")}) else {
+        // 先找到 "|+ Tracks" 所在行
+        // 也可能是 "| + Tracks"，不同的文件空格会不一样，不太懂
+        // 暂时先只搜 "Tracks"
+        guard let trackStartIndex = output.firstIndex(where: { $0.contains("Tracks")}) else {
             throw NSFMKVError.dummy
         }
         

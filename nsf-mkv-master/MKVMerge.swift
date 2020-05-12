@@ -19,11 +19,14 @@ class MKVMerge {
     
     func modifyTrackNameIn(file: URL, type: MKV.TrackType, language: MKV.Language?, trackID: String?, trackName: String) throws {
         if let language = language {
+            print("开始处理 " + file.lastPathComponent + "...")
+            
             let tracks = try MKVInfo.shared.tracks(in: file, type: type)
             
             if let matchedTrackIDs = tracks.filter({ $0.language == language }).map({ $0.id }).first {
                 try executeTask(with: file,
-                                operation: ["--track-name", matchedTrackIDs + ":" + trackName])
+                                operation: ["--track-name", matchedTrackIDs + ":" + trackName],
+                                showOutput: true)
             }
             else {
                 throw NSFMKVError.dummy
@@ -33,12 +36,21 @@ class MKVMerge {
     
     func removeTrackFrom(file: URL, type: MKV.TrackType, option: Option, language: MKV.Language?, trackID: String?) throws {
         if let language = language {
-            let audioTracks = try MKVInfo.shared.tracks(in: file, type: type)
+            let tracks = try MKVInfo.shared.tracks(in: file, type: type)
             
-            let remainAudioTrackIDs = audioTracks.filter() { option == .reverse ? $0.language == language : $0.language != language }
+            let remainedTrackIDs = tracks.filter() { option == .reverse ? $0.language == language : $0.language != language }
                 .map { $0.id }
-            if remainAudioTrackIDs.count > 0 {
-                try executeTask(with: file, operation: ["-a", remainAudioTrackIDs.joined(separator: ",")])
+            
+            if tracks.count == 1
+                && remainedTrackIDs.count == 1 {
+                print("无须处理 " + file.lastPathComponent + ", 跳过.")
+                // MKV 文件中本身已经只剩下指定语言的 track 了，无须混流，直接略过
+            }
+            else if remainedTrackIDs.count > 0 {
+                print("开始处理 " + file.lastPathComponent + "...")
+                try executeTask(with: file,
+                                operation: ["-a", remainedTrackIDs.joined(separator: ",")],
+                                showOutput: true)
             }
             else {
                 // TODO: 找不到指定 type、指定语言的 track
@@ -59,7 +71,14 @@ class MKVMerge {
         }()
         
         if operation != MKV.TrackType.other.rawValue {
-            try executeTask(with: file, operation: [operation])
+            let tracks = try MKVInfo.shared.tracks(in: file, type: type)
+            if tracks.count == 0 {
+                print("无须处理 " + file.lastPathComponent + ", 跳过.")
+            }
+            else {
+                print("开始处理 " + file.lastPathComponent + "...")
+                try executeTask(with: file, operation: [operation], showOutput: true)
+            }
         }
     }
 }
@@ -67,11 +86,15 @@ class MKVMerge {
 // Private
 private extension MKVMerge {
     
-    func executeTask(with fileURL: URL, operation: [String], option: Option = .replaceOriginal) throws {
+    func executeTask(with fileURL: URL, operation: [String],
+                     option: Option = .replaceOriginal,
+                     showOutput: Bool = false) throws {
         let fileName = fileURL.lastPathComponent
         let newFileName = fileURL.deletingPathExtension().lastPathComponent + "_temp" + ".mkv"
         
-        MKVTask.startTask(with: executableURL, arguments: ["-o", newFileName] + operation + [fileName])
+        MKVTask.startTask(with: executableURL,
+                          arguments: ["-o", newFileName] + operation + [fileName],
+                          showOutput: showOutput)
         
         // TODO: let dirURL = file.deletingLastPathComponent() 为什么不行？
         let dirURL = URL.init(fileURLWithPath: fileURL.deletingLastPathComponent().path)
