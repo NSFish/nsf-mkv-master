@@ -19,6 +19,7 @@ enum Option: String {
     case replaceOriginal = "--replace-original"
     case reverse = "--reverse"
     case all = "--all"
+    case none
 }
 
 var urlString: String!
@@ -26,7 +27,8 @@ var operationString: String!
 var trackTypeString: String!
 var trackLanguage: MKV.Language?
 var trackID: String?
-var optionString: String!
+var trackName: String?
+var optionString: String?
 for (index, argument) in CommandLine.arguments.enumerated() {
     if (argument == "-dir") {
         urlString = CommandLine.arguments[index + 1]
@@ -43,6 +45,9 @@ for (index, argument) in CommandLine.arguments.enumerated() {
     else if (argument == "-track-id") {
         trackID = CommandLine.arguments[index + 1]
     }
+    else if (argument == "-track-name") {
+        trackName = CommandLine.arguments[index + 1]
+    }
     else if (argument == "-option") {
         optionString = CommandLine.arguments[index + 1]
     }
@@ -58,9 +63,7 @@ guard let trackType = MKV.TrackType.init(rawValue: trackTypeString) else {
     throw NSFMKVError.unknownTrackType
 }
 
-guard let option = Option.init(rawValue: optionString) else {
-    throw NSFMKVError.dummy
-}
+let option = Option.init(rawValue: optionString ?? "") ?? .none
 
 do {
     let mkvFiles = try MKVTask.detectMKVFilesIn(directory: directory)
@@ -73,6 +76,13 @@ do {
             else {
                 try MKVMerge.shared.removeTrackFrom(file: fileURL, type: trackType, option: option, language: trackLanguage, trackID: trackID)
             }
+        }
+        else if operation == .modify {
+            try MKVMerge.shared.modifyTrackNameIn(file: fileURL,
+                                                  type: trackType,
+                                                  language: trackLanguage,
+                                                  trackID: trackID,
+                                                  trackName: trackName ?? "")
         }
     }
 

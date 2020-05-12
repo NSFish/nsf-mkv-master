@@ -12,6 +12,7 @@ class MKV {
     
     enum Operation: String {        
         case remove
+        case modify
     }
     
     enum Remove: String {

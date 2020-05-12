@@ -56,6 +56,22 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-operation modify"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-track-type audio"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-language jpn"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-track-name &#x65e5;&#x672c;&#x8bed;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-dir /Volumes/ZYAN/&#x89c6;&#x9891;/&#x52a8;&#x6f2b;/&#x6b7b;&#x795e;"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -65,15 +81,11 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-operation remove"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-track-type subtitles"
             isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-track-type audio"
-            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-option --all"
@@ -81,11 +93,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-option --reverse"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-language jpn"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

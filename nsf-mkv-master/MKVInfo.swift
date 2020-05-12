@@ -11,7 +11,7 @@ import Foundation
 class MKVInfo {
     
     static let shared = MKVInfo()
-    let executableURL: URL
+    private let executableURL: URL
     
     private init() {
         executableURL = URL.init(fileURLWithPath: "/usr/local/bin/mkvinfo")
@@ -66,7 +66,7 @@ class MKVInfo {
     }
 }
 
-extension MKVInfo {
+private extension MKVInfo {
     
     func trackInfosFrom(output: [String]) throws -> [[String]] {
         // 先找到 "| + Track" 所在行
