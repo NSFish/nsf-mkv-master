@@ -56,7 +56,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-operation modify"
+            argument = "-operation remove"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -68,8 +68,16 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-track-name &#x65e5;&#x672c;&#x8bed;"
+            argument = "-option --reverse"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-track-name &#x65e5;&#x672c;&#x8bed;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-operation modify"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-dir /Volumes/ZYAN/&#x89c6;&#x9891;/&#x52a8;&#x6f2b;/&#x6b7b;&#x795e;"
@@ -80,19 +88,11 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-operation remove"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "-track-type subtitles"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-option --all"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-option --reverse"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>

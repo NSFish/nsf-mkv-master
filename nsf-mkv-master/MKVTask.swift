@@ -28,15 +28,14 @@ class MKVTask {
         let task = Process()
         task.currentDirectoryURL = directory
         task.executableURL = executableURL
+        task.arguments = arguments
         
         // TODO: 如何过滤输出的提示信息？
-        // https://stackoverflow.com/questions/29548811/real-time-nstask-output-to-nstextview-with-swift
         let outputPipe = Pipe()
         task.standardOutput = outputPipe
         
         // 防止在 Console 中输出 error log
         task.standardError = Pipe()
-        task.arguments = arguments
         
         task.launch()
         

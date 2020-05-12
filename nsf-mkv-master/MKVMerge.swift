@@ -37,8 +37,15 @@ class MKVMerge {
             
             let remainAudioTrackIDs = audioTracks.filter() { option == .reverse ? $0.language == language : $0.language != language }
                 .map { $0.id }
-                .joined(separator: ",")
-            try executeTask(with: file, operation: ["-a", remainAudioTrackIDs])
+            if remainAudioTrackIDs.count > 0 {
+                try executeTask(with: file, operation: ["-a", remainAudioTrackIDs.joined(separator: ",")])
+            }
+            else {
+                // TODO: 找不到指定 type、指定语言的 track
+                if option == .reverse {
+                    throw NSFMKVError.dummy
+                }
+            }
         }
     }
     
@@ -65,7 +72,7 @@ private extension MKVMerge {
         let newFileName = fileURL.deletingPathExtension().lastPathComponent + "_temp" + ".mkv"
         
         MKVTask.startTask(with: executableURL, arguments: ["-o", newFileName] + operation + [fileName])
-
+        
         // TODO: let dirURL = file.deletingLastPathComponent() 为什么不行？
         let dirURL = URL.init(fileURLWithPath: fileURL.deletingLastPathComponent().path)
         let newFileURL = dirURL.appendingPathComponent(newFileName)

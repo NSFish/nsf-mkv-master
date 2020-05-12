@@ -23,8 +23,7 @@ class MKVInfo {
 
     func tracks(in file: URL) throws -> [MKV.Track] {
         let fileName = file.lastPathComponent
-        let arguments = ["-o", fileName]
-        let output = MKVTask.startTask(with: executableURL, arguments: arguments)
+        let output = MKVTask.startTask(with: executableURL, arguments: [fileName])
         
         let trackInfos = try trackInfosFrom(output: output)
         
