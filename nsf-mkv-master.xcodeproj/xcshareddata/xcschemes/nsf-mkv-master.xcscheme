@@ -52,27 +52,39 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-dir"
+            argument = "-dir $(HOME)/Desktop"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/Volumes/ZYAN/&#x89c6;&#x9891;/&#x52a8;&#x6f2b;/&#x6b7b;&#x795e;"
+            argument = "-dir /Volumes/ZYAN/&#x89c6;&#x9891;/&#x52a8;&#x6f2b;/&#x6b7b;&#x795e;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-dir /Volumes/ZYAN/a"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-operation remove"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-operation"
+            argument = "-track-type subtitles"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-track-type audio"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--no-subtitles"
+            argument = "-option --all"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-option --reverse"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-option"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--replace-original"
+            argument = "-language jpn"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

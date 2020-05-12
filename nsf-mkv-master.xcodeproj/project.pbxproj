@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7051E4E7244EBF3C00C35014 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7051E4E6244EBF3C00C35014 /* main.swift */; };
+		705B3F5A2460BAAB00A8C981 /* MKV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705B3F592460BAAB00A8C981 /* MKV.swift */; };
+		705B3F5C2460BDFD00A8C981 /* MKVTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705B3F5B2460BDFD00A8C981 /* MKVTask.swift */; };
+		707A5BCA2456E8A300F18367 /* MKVInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707A5BC92456E8A300F18367 /* MKVInfo.swift */; };
 		708ABA80244ECB3E00803ED3 /* MKVMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708ABA7F244ECB3E00803ED3 /* MKVMerge.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +29,9 @@
 /* Begin PBXFileReference section */
 		7051E4E3244EBF3C00C35014 /* nsf-mkv-master */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "nsf-mkv-master"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7051E4E6244EBF3C00C35014 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		705B3F592460BAAB00A8C981 /* MKV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKV.swift; sourceTree = "<group>"; };
+		705B3F5B2460BDFD00A8C981 /* MKVTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKVTask.swift; sourceTree = "<group>"; };
+		707A5BC92456E8A300F18367 /* MKVInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKVInfo.swift; sourceTree = "<group>"; };
 		708ABA7F244ECB3E00803ED3 /* MKVMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKVMerge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,6 +67,9 @@
 			children = (
 				7051E4E6244EBF3C00C35014 /* main.swift */,
 				708ABA7F244ECB3E00803ED3 /* MKVMerge.swift */,
+				707A5BC92456E8A300F18367 /* MKVInfo.swift */,
+				705B3F5B2460BDFD00A8C981 /* MKVTask.swift */,
+				705B3F592460BAAB00A8C981 /* MKV.swift */,
 			);
 			path = "nsf-mkv-master";
 			sourceTree = "<group>";
@@ -123,7 +132,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				705B3F5C2460BDFD00A8C981 /* MKVTask.swift in Sources */,
+				707A5BCA2456E8A300F18367 /* MKVInfo.swift in Sources */,
 				7051E4E7244EBF3C00C35014 /* main.swift in Sources */,
+				705B3F5A2460BAAB00A8C981 /* MKV.swift in Sources */,
 				708ABA80244ECB3E00803ED3 /* MKVMerge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

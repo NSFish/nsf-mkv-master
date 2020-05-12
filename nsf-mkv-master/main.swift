@@ -8,20 +8,24 @@
 
 import Foundation
 
-enum ParseError: Error {
+enum NSFMKVError: Error {
+    case unknownOperation
+    case unknownTrackType
+    case noFiles
     case dummy
-}
-
-enum Operation: String {
-    case removeAllSubtitles = "--no-subtitles"
 }
 
 enum Option: String {
     case replaceOriginal = "--replace-original"
+    case reverse = "--reverse"
+    case all = "--all"
 }
 
 var urlString: String!
 var operationString: String!
+var trackTypeString: String!
+var trackLanguage: MKV.Language?
+var trackID: String?
 var optionString: String!
 for (index, argument) in CommandLine.arguments.enumerated() {
     if (argument == "-dir") {
@@ -30,38 +34,50 @@ for (index, argument) in CommandLine.arguments.enumerated() {
     else if (argument == "-operation") {
         operationString = CommandLine.arguments[index + 1]
     }
+    else if (argument == "-track-type") {
+        trackTypeString = CommandLine.arguments[index + 1]
+    }
+    else if (argument == "-language") {
+        trackLanguage = MKV.Language.init(rawValue: CommandLine.arguments[index + 1])
+    }
+    else if (argument == "-track-id") {
+        trackID = CommandLine.arguments[index + 1]
+    }
     else if (argument == "-option") {
         optionString = CommandLine.arguments[index + 1]
     }
 }
 
-let dirURL = URL.init(fileURLWithPath: urlString)
+let directory = URL.init(fileURLWithPath: urlString)
 
-guard let operation = Operation.init(rawValue: operationString) else {
-    throw ParseError.dummy
+guard let operation = MKV.Operation.init(rawValue: operationString) else {
+    throw NSFMKVError.unknownOperation
+}
+
+guard let trackType = MKV.TrackType.init(rawValue: trackTypeString) else {
+    throw NSFMKVError.unknownTrackType
 }
 
 guard let option = Option.init(rawValue: optionString) else {
-    throw ParseError.dummy
+    throw NSFMKVError.dummy
 }
 
 do {
-    let items = try FileManager.default.contentsOfDirectory(at: dirURL, includingPropertiesForKeys: .none, options: .skipsHiddenFiles)
-    let mkvFiles = items.filter { url -> Bool in
-        return url.pathExtension.lowercased() == "mkv"
-    }
-
-    if (mkvFiles.count == 0) {
-        // 在指定目录下没找到 mkv 文件
-        throw ParseError.dummy
-    }
-
+    let mkvFiles = try MKVTask.detectMKVFilesIn(directory: directory)
+    
     try mkvFiles.forEach { fileURL in
-        try MKVMerge.removeAllSubtitlesFrom(file: fileURL, option: option)
+        if operation == .remove {
+            if option == .all {
+                try MKVMerge.shared.removeAllTracksFrom(file: fileURL, type: trackType, option: option)
+            }
+            else {
+                try MKVMerge.shared.removeTrackFrom(file: fileURL, type: trackType, option: option, language: trackLanguage, trackID: trackID)
+            }
+        }
     }
 
     print("Done.")
-} catch let error as NSError {
+} catch let error as NSFMKVError {
     print(error)
 }
 
